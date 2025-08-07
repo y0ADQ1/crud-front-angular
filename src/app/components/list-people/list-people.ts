@@ -21,7 +21,15 @@ export class ListPeopleComponent implements OnInit {
   showEditForm: boolean = false;
   newPerson: Omit<Person, 'id' | 'isActive'> = { firstName: '', lastName: '', age: 0, gender: 'male', email: '', phoneNumber: '' };
   selectedPerson: Person | null = null;
-  errors: string[] = [];
+  fieldErrors: { [key: string]: string[] } = {
+    firstName: [],
+    lastName: [],
+    age: [],
+    gender: [],
+    email: [],
+    phoneNumber: []
+  };
+  generalErrors: string[] = [];
 
   constructor(public authService: AuthService, private personService: PersonService) {}
 
@@ -39,7 +47,7 @@ export class ListPeopleComponent implements OnInit {
         this.pagination = data;
       },
       error: (err) => {
-        this.errors = [err.error?.message || 'Error al cargar personas'];
+  this.generalErrors = [err.error?.message || 'Error al cargar personas'];
       },
     });
   }
@@ -47,17 +55,43 @@ export class ListPeopleComponent implements OnInit {
   openCreateForm() {
     this.showCreateForm = true;
     this.newPerson = { firstName: '', lastName: '', age: 0, gender: 'male', email: '', phoneNumber: '' };
-    this.errors = [];
+    this.clearErrors();
+  }
+
+  clearErrors() {
+    this.fieldErrors = {
+      firstName: [],
+      lastName: [],
+      age: [],
+      gender: [],
+      email: [],
+      phoneNumber: []
+    };
+    this.generalErrors = [];
   }
 
   createPerson() {
+    this.clearErrors();
     this.personService.createPerson(this.newPerson).subscribe({
       next: () => {
         this.showCreateForm = false;
         this.loadPeople();
       },
       error: (err) => {
-        this.errors = err.error?.errors?.map((e: any) => e.message) || [err.error?.message || 'Error al crear persona'];
+        const errors = err.error?.errors;
+        if (Array.isArray(errors)) {
+          errors.forEach((e: any) => {
+            if (e.field && this.fieldErrors[e.field] !== undefined) {
+              this.fieldErrors[e.field].push(e.message);
+            } else {
+              this.generalErrors.push(e.message);
+            }
+          });
+        } else if (err.error?.message) {
+          this.generalErrors.push(err.error.message);
+        } else {
+          this.generalErrors.push('Error al crear persona');
+        }
       },
     });
   }
@@ -65,18 +99,32 @@ export class ListPeopleComponent implements OnInit {
   editPerson(person: Person) {
     this.selectedPerson = { ...person };
     this.showEditForm = true;
-    this.errors = [];
+    this.clearErrors();
   }
 
   updatePerson() {
     if (this.selectedPerson) {
+      this.clearErrors();
       this.personService.updatePerson(this.selectedPerson.id, this.selectedPerson).subscribe({
         next: () => {
           this.showEditForm = false;
           this.loadPeople();
         },
         error: (err) => {
-          this.errors = err.error?.errors?.map((e: any) => e.message) || [err.error?.message || 'Error al actualizar persona'];
+          const errors = err.error?.errors;
+          if (Array.isArray(errors)) {
+            errors.forEach((e: any) => {
+              if (e.field && this.fieldErrors[e.field] !== undefined) {
+                this.fieldErrors[e.field].push(e.message);
+              } else {
+                this.generalErrors.push(e.message);
+              }
+            });
+          } else if (err.error?.message) {
+            this.generalErrors.push(err.error.message);
+          } else {
+            this.generalErrors.push('Error al actualizar persona');
+          }
         },
       });
     }
@@ -88,7 +136,7 @@ export class ListPeopleComponent implements OnInit {
         this.loadPeople();
       },
       error: (err) => {
-        this.errors = [err.error?.message || 'Error al desactivar persona'];
+  this.generalErrors = [err.error?.message || 'Error al desactivar persona'];
       },
     });
   }

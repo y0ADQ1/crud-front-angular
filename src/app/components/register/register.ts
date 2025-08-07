@@ -17,17 +17,49 @@ export class RegisterComponent {
   password: string = '';
   password_confirmation: string = '';
   fullName: string | null = null;
-  errors: string[] = [];
+
+  fieldErrors: { [key: string]: string[] } = {
+    fullName: [],
+    email: [],
+    password: [],
+    password_confirmation: []
+  };
+  generalErrors: string[] = [];
 
   constructor(private authService: AuthService, private router: Router) {}
 
+  clearErrors() {
+    this.fieldErrors = {
+      fullName: [],
+      email: [],
+      password: [],
+      password_confirmation: []
+    };
+    this.generalErrors = [];
+  }
+
   onSubmit() {
+    this.clearErrors();
     this.authService.register(this.email, this.password, this.fullName).subscribe({
       next: () => {
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        this.errors = err.error?.errors?.map((e: any) => e.message) || [err.error?.message || 'Error al registrarse'];
+        // Suponiendo que el backend retorna errores en formato: { field: string, message: string }
+        const errors = err.error?.errors;
+        if (Array.isArray(errors)) {
+          errors.forEach((e: any) => {
+            if (e.field && this.fieldErrors[e.field] !== undefined) {
+              this.fieldErrors[e.field].push(e.message);
+            } else {
+              this.generalErrors.push(e.message);
+            }
+          });
+        } else if (err.error?.message) {
+          this.generalErrors.push(err.error.message);
+        } else {
+          this.generalErrors.push('Error al registrarse');
+        }
       },
     });
   }

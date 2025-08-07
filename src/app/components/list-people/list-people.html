@@ -16,18 +16,18 @@
     <form (ngSubmit)="createPerson()">
       <div class="form-group">
         <label>Nombre:</label>
-        <input [(ngModel)]="newPerson.firstName" name="firstName" required />
-        <app-error [errors]="errors"></app-error>
+  <input [(ngModel)]="newPerson.firstName" name="firstName" required />
+  <app-error [errors]="fieldErrors['firstName']"></app-error>
       </div>
       <div class="form-group">
         <label>Apellido:</label>
-        <input [(ngModel)]="newPerson.lastName" name="lastName" required />
-        <app-error [errors]="errors"></app-error>
+  <input [(ngModel)]="newPerson.lastName" name="lastName" required />
+  <app-error [errors]="fieldErrors['lastName']"></app-error>
       </div>
       <div class="form-group">
         <label>Edad:</label>
-        <input type="number" [(ngModel)]="newPerson.age" name="age" required />
-        <app-error [errors]="errors"></app-error>
+  <input type="number" [(ngModel)]="newPerson.age" name="age" required />
+  <app-error [errors]="fieldErrors['age']"></app-error>
       </div>
       <div class="form-group">
         <label>Género:</label>
@@ -38,14 +38,15 @@
       </div>
       <div class="form-group">
         <label>Email:</label>
-        <input type="email" [(ngModel)]="newPerson.email" name="email" required />
-        <app-error [errors]="errors"></app-error>
+  <input type="email" [(ngModel)]="newPerson.email" name="email" required />
+  <app-error [errors]="fieldErrors['email']"></app-error>
       </div>
       <div class="form-group">
         <label>Teléfono:</label>
-        <input [(ngModel)]="newPerson.phoneNumber" name="phoneNumber" required />
-        <app-error [errors]="errors"></app-error>
+  <input [(ngModel)]="newPerson.phoneNumber" name="phoneNumber" required />
+  <app-error [errors]="fieldErrors['phoneNumber']"></app-error>
       </div>
+      <app-error [errors]="generalErrors"></app-error>
       <button type="submit">Guardar</button>
       <button type="button" (click)="showCreateForm = false">Cancelar</button>
     </form>
@@ -94,18 +95,18 @@
     <form (ngSubmit)="updatePerson()">
       <div class="form-group">
         <label>Nombre:</label>
-        <input [(ngModel)]="selectedPerson.firstName" name="firstName" required />
-        <app-error [errors]="errors"></app-error>
+  <input [(ngModel)]="selectedPerson.firstName" name="firstName" required />
+  <app-error [errors]="fieldErrors['firstName']"></app-error>
       </div>
       <div class="form-group">
         <label>Apellido:</label>
-        <input [(ngModel)]="selectedPerson.lastName" name="lastName" required />
-        <app-error [errors]="errors"></app-error>
+  <input [(ngModel)]="selectedPerson.lastName" name="lastName" required />
+  <app-error [errors]="fieldErrors['lastName']"></app-error>
       </div>
       <div class="form-group">
         <label>Edad:</label>
-        <input type="number" [(ngModel)]="selectedPerson.age" name="age" required />
-        <app-error [errors]="errors"></app-error>
+  <input type="number" [(ngModel)]="selectedPerson.age" name="age" required />
+  <app-error [errors]="fieldErrors['age']"></app-error>
       </div>
       <div class="form-group">
         <label>Género:</label>
@@ -116,14 +117,15 @@
       </div>
       <div class="form-group">
         <label>Email:</label>
-        <input type="email" [(ngModel)]="selectedPerson.email" name="email" required />
-        <app-error [errors]="errors"></app-error>
+  <input type="email" [(ngModel)]="selectedPerson.email" name="email" required />
+  <app-error [errors]="fieldErrors['email']"></app-error>
       </div>
       <div class="form-group">
         <label>Teléfono:</label>
-        <input [(ngModel)]="selectedPerson.phoneNumber" name="phoneNumber" required />
-        <app-error [errors]="errors"></app-error>
+  <input [(ngModel)]="selectedPerson.phoneNumber" name="phoneNumber" required />
+  <app-error [errors]="fieldErrors['phoneNumber']"></app-error>
       </div>
+      <app-error [errors]="generalErrors"></app-error>
       <button type="submit">Actualizar</button>
       <button type="button" (click)="showEditForm = false">Cancelar</button>
     </form>
