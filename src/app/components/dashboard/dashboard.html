@@ -1,0 +1,26 @@
+<div class="dashboard-container">
+  <header>
+    <h2>Dashboard</h2>
+    <button (click)="authService.logout()">Cerrar Sesión</button>
+  </header>
+  <nav>
+    <a routerLink="/people">Lista de Personas</a>
+  </nav>
+  <div class="filter-buttons">
+    <button (click)="loadStats('default')" [class.active]="currentFilter === 'default'">Por Género</button>
+    <button (click)="loadStats('age')" [class.active]="currentFilter === 'age'">Por Edad</button>
+    <button (click)="loadStats('combined')" [class.active]="currentFilter === 'combined'">Combinado</button>
+  </div>
+  @if (stats) {
+    <div class="chart-container">
+      @for (key of statKeys; track key) {
+        <div class="bar" [style.--bar-height]="getBarHeight(stats[key])">
+          <span class="label">{{ key | titlecase }}</span>
+          <span class="value">{{ stats[key] }}</span>
+        </div>
+      }
+    </div>
+  } @else {
+    <p>Cargando estadísticas...</p>
+  }
+</div>
